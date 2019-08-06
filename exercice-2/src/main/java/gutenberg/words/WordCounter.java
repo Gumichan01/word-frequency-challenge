@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public final class WordCounter {
@@ -19,9 +20,6 @@ public final class WordCounter {
         }
 
         List<String> words = retrieveWordsFrom(Paths.get(bookPath));
-        List<String> distinctWords = Collections.unmodifiableList(words).stream().distinct().collect(Collectors.toList());
-        System.out.println(words.size());
-        System.out.println(distinctWords.size());
         Map<String, Integer> wordsCount = processCounting(words);
         Set<Map.Entry<String, Integer>> entries = wordsCount.entrySet();
         return retrieveTop100UsedWords(entries);
@@ -43,9 +41,7 @@ public final class WordCounter {
     }
 
     private Map<String, Integer> processCounting(List<String> words) {
-        Map<String, Integer> map = new HashMap<>();
-        words.forEach(s -> map.put(s, map.getOrDefault(s, 0) + 1));
-        return map;
+        return words.parallelStream().collect(Collectors.toConcurrentMap(word -> word, word -> 1, Integer::sum));
     }
 
     private List<WordFrequency> retrieveTop100UsedWords(Set<Map.Entry<String, Integer>> entries) {
