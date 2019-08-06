@@ -1,19 +1,45 @@
 package gutenberg.words;
 
+import gutenberg.exception.CheckedIllegalArgumentException;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 public final class WordCounter {
 
-    public Map<String, Integer> count(String filePath) {
+    public Map<String, Integer> count(String bookName) throws CheckedIllegalArgumentException {
+
+        if (bookName == null) {
+            throw new CheckedIllegalArgumentException("The document to load is not provided");
+        }
+
+        Path filePath = Paths.get(bookName);
         List<String> words = retrieveWordsFrom(filePath);
         Map<String, Integer> wordsCount = processCounting(words);
         // TODO sort in order to to get the 100 top most used word
         return wordsCount;
     }
 
-    private List<String> retrieveWordsFrom(String filePath) {
+    private List<String> retrieveWordsFrom(Path filePath) {
+        String text = retrieveTextOf(filePath);
+        System.out.println(text.length());
+        System.out.println(text);
         return null;
+    }
+
+    private String retrieveTextOf(Path filePath) {
+        try {
+            byte[] bytes = Files.readAllBytes(filePath);
+            return new String(bytes);
+
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private Map<String, Integer> processCounting(List<String> words) {
