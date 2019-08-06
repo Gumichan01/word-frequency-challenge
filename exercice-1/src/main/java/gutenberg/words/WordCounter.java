@@ -7,6 +7,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,8 @@ public final class WordCounter {
 
     private List<String> retrieveWordsFrom(Path filePath) {
         String text = retrieveTextOf(filePath);
-        System.out.println(text.length());
-        System.out.println(text);
-        return null;
+        String[] words = text.split("\\s+");
+        return Arrays.asList(words);
     }
 
     private String retrieveTextOf(Path filePath) {
