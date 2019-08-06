@@ -40,9 +40,7 @@ public final class WordCounter {
     }
 
     private Map<String, Integer> processCounting(List<String> words) {
-        Map<String, Integer> map = new HashMap<>();
-        words.forEach(s -> map.put(s, map.getOrDefault(s, 0) + 1));
-        return map;
+        return words.stream().collect(Collectors.toMap(word -> word, word -> 1, Integer::sum));
     }
 
     private List<WordFrequency> retrieveTop100UsedWords(Set<Map.Entry<String, Integer>> entries) {
