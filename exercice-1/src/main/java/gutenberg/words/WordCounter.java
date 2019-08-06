@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,8 @@ public final class WordCounter {
     }
 
     private Map<String, Integer> processCounting(List<String> words) {
-        return null;
+        Map<String, Integer> map = new HashMap<>();
+        words.forEach(s -> map.put(s, map.getOrDefault(s,0) + 1));
+        return map;
     }
 }
