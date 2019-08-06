@@ -14,21 +14,20 @@ import java.util.Map;
 
 public final class WordCounter {
 
-    public Map<String, Integer> count(String bookName) throws CheckedIllegalArgumentException {
+    public Map<String, Integer> count(String bookPath) throws CheckedIllegalArgumentException {
 
-        if (bookName == null) {
-            throw new CheckedIllegalArgumentException("The document to load is not provided");
+        if (bookPath == null) {
+            throw new CheckedIllegalArgumentException("The book to load is not provided");
         }
 
-        Path filePath = Paths.get(bookName);
-        List<String> words = retrieveWordsFrom(filePath);
+        List<String> words = retrieveWordsFrom(Paths.get(bookPath));
         Map<String, Integer> wordsCount = processCounting(words);
         // TODO sort in order to to get the 100 top most used word
         return wordsCount;
     }
 
-    private List<String> retrieveWordsFrom(Path filePath) {
-        String text = retrieveTextOf(filePath);
+    private List<String> retrieveWordsFrom(Path book) {
+        String text = retrieveTextOf(book);
         String[] words = text.split("\\s+");
         return Arrays.asList(words);
     }
@@ -37,7 +36,6 @@ public final class WordCounter {
         try {
             byte[] bytes = Files.readAllBytes(filePath);
             return new String(bytes);
-
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -45,7 +43,7 @@ public final class WordCounter {
 
     private Map<String, Integer> processCounting(List<String> words) {
         Map<String, Integer> map = new HashMap<>();
-        words.forEach(s -> map.put(s, map.getOrDefault(s,0) + 1));
+        words.forEach(s -> map.put(s, map.getOrDefault(s, 0) + 1));
         return map;
     }
 }
