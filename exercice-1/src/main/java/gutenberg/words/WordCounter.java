@@ -7,14 +7,12 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public final class WordCounter {
 
-    public Map<String, Integer> count(String bookPath) throws CheckedIllegalArgumentException {
+    public List<WordFrequency> count(String bookPath) throws CheckedIllegalArgumentException {
 
         if (bookPath == null) {
             throw new CheckedIllegalArgumentException("The book to load is not provided");
@@ -22,8 +20,8 @@ public final class WordCounter {
 
         List<String> words = retrieveWordsFrom(Paths.get(bookPath));
         Map<String, Integer> wordsCount = processCounting(words);
-        // TODO sort in order to to get the 100 top most used word
-        return wordsCount;
+        Set<Map.Entry<String, Integer>> entries = wordsCount.entrySet();
+        return retrieveTop100UsedWords(entries);
     }
 
     private List<String> retrieveWordsFrom(Path book) {
@@ -45,5 +43,12 @@ public final class WordCounter {
         Map<String, Integer> map = new HashMap<>();
         words.forEach(s -> map.put(s, map.getOrDefault(s, 0) + 1));
         return map;
+    }
+
+    private List<WordFrequency> retrieveTop100UsedWords(Set<Map.Entry<String, Integer>> entries) {
+        int numberOfEntriesToTake = 100;
+        Comparator<Map.Entry<String, Integer>> entryComparator = (o1, o2) -> Integer.compare(o2.getValue(), o1.getValue());
+        return entries.stream().sorted(entryComparator).limit(numberOfEntriesToTake).
+                map(entry -> new WordFrequency(entry.getKey(), entry.getValue())).collect(Collectors.toList());
     }
 }
