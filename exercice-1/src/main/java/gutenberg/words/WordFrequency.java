@@ -19,24 +19,6 @@ public final class WordFrequency {
     }
 
     @Override
-    public int hashCode() {
-        return 31 * word.hashCode() + frequency;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof WordFrequency)) {
-            return false;
-        }
-
-        WordFrequency wf = (WordFrequency) obj;
-        return word.equals(wf.word) && frequency == wf.frequency;
-    }
-
-    @Override
     public String toString() {
         return "{" + word + ", " + frequency + "}";
     }
