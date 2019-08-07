@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 public final class WordCounter {
 
-    public List<WordFrequency> count(String bookPath) throws CheckedIllegalArgumentException {
+    public List<WordFrequency> count(String bookPath) {
 
         if (bookPath == null) {
-            throw new CheckedIllegalArgumentException("The book to load is not provided");
+            throw new IllegalArgumentException("The book to load is not provided");
         }
 
         List<String> words = retrieveWordsFrom(Paths.get(bookPath));
